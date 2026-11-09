@@ -1,0 +1,65 @@
+<!doctype html><html><head><title>1학년 6반 온라인 종례</title><meta name="viewport" content="width=device-width,initial-scale=1"><meta charset="utf-8">
+<style>
+body{font-family:'Malgun Gothic',sans-serif;margin:0;background:#eef3f8;color:#1f3a5c}
+.wrap{max-width:420px;margin:0 auto;padding:16px}
+h1{font-size:20px;text-align:center;margin:8px 0 4px}.sub{text-align:center;font-size:13px;color:#667;margin-bottom:14px}
+.card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 8px #0001}
+input{width:100%;box-sizing:border-box;padding:12px;margin:5px 0;border:1px solid #c5d0dc;border-radius:8px;font-size:16px}
+.cam{background:#000;border-radius:10px;overflow:hidden;margin:8px 0;aspect-ratio:3/4}
+video,#shot{width:100%;height:100%;object-fit:cover;display:block}video{transform:scaleX(-1)}#shot{display:none}
+button{width:100%;padding:14px;margin-top:6px;border:0;border-radius:10px;font-size:17px;font-weight:bold;background:#2a5d8f;color:#fff}
+button.gray{background:#8a97a6}button:disabled{opacity:.5}
+#msg{text-align:center;margin-top:10px;font-weight:bold;min-height:22px}.ok{color:#1b8a3a}.err{color:#c0392b}
+body{background:linear-gradient(180deg,#ffe9f3 0%,#eaf2ff 55%,#e9fff3 100%) fixed}
+.cat{display:block;width:170px;margin:4px auto 0;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+h1{background:linear-gradient(90deg,#ff7a96,#ffb347,#6cc070,#4aa3ff,#a77bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{border:2px solid #fff;box-shadow:0 6px 18px #a77bff33}
+button{background:linear-gradient(90deg,#ff8fb1,#ffb86c,#7ed6a0,#7ab8ff,#b794ff)}
+button.gray{background:#9aa6b6}
+</style></head><body><div class="wrap">
+<svg class="cat" viewBox="0 0 200 150" aria-hidden="true">
+<defs><linearGradient id="rb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a8a"/><stop offset=".2" stop-color="#ffb870"/><stop offset=".4" stop-color="#ffe27a"/><stop offset=".6" stop-color="#9be59b"/><stop offset=".8" stop-color="#8ccbff"/><stop offset="1" stop-color="#c3a2ff"/></linearGradient></defs>
+<g fill="none" stroke-width="7" stroke-linecap="round"><path d="M18 135A82 82 0 0 1 182 135" stroke="#ff8a8a"/><path d="M26 135A74 74 0 0 1 174 135" stroke="#ffd36e"/><path d="M34 135A66 66 0 0 1 166 135" stroke="#8fdc9a"/><path d="M42 135A58 58 0 0 1 158 135" stroke="#8ccbff"/></g>
+<path d="M62 62L58 30L84 48Z M138 62L142 30L116 48Z" fill="url(#rb)" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
+<ellipse cx="100" cy="92" rx="46" ry="40" fill="url(#rb)" stroke="#fff" stroke-width="4"/>
+<path d="M82 88q6-9 12 0M106 88q6-9 12 0" stroke="#3a2a4a" stroke-width="4" fill="none" stroke-linecap="round"/>
+<ellipse cx="78" cy="102" rx="7" ry="5" fill="#ff9fb8" opacity=".8"/><ellipse cx="122" cy="102" rx="7" ry="5" fill="#ff9fb8" opacity=".8"/>
+<path d="M94 100q6 4 12 0" stroke="#3a2a4a" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M92 102q8 12 16 0z" fill="#ff7a96"/>
+<path d="M56 98l-16-3M56 104l-16 4M144 98l16-3M144 104l16 4" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+</svg>
+<h1>1학년 6반 온라인 종례</h1><div class="sub">오늘 종례 인증 🌈 · 제출 가능 11/10 13:00~13:30</div>
+<div class="card">
+<input id="id" inputmode="numeric" placeholder="학번 (예: 10631)" maxlength="5">
+<input id="nm" placeholder="이름">
+<div class="cam"><video id="v" autoplay playsinline muted></video><img id="shot"></div>
+<button id="snap">📸 셀카 찍기</button>
+<button id="retake" class="gray" style="display:none">다시 찍기</button>
+<button id="send" style="display:none">제출하기</button>
+<div id="msg"></div></div>
+<div class="sub" style="margin-top:10px">얼굴이 잘 보이게, 밝은 곳에서 찍어요. 사진에 날짜·시간이 자동으로 찍힙니다.</div>
+</div>
+<script>
+const API="https://script.google.com/macros/s/AKfycbyL-EBtXRgKRk6X9WZOFXMuI2OA_OdipJwCu8n8UhAlG5ErC6qK0FD-r-I7nPRJ39As/exec";
+function call(p){return fetch(API,{method:"POST",body:JSON.stringify(p)}).then(function(r){return r.json()})}
+const $=s=>document.getElementById(s);let data='';
+try{$('id').value=localStorage.sid||'';$('nm').value=localStorage.snm||'';}catch(e){}
+function say(t,ok){$('msg').textContent=t;$('msg').className=ok?'ok':'err'}
+async function cam(){try{$('v').srcObject=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:960}},audio:false});}
+catch(e){say('카메라를 허용해 주세요 (주소창 옆 권한 확인)',0)}}
+$('snap').onclick=()=>{
+ if(!$('id').value.trim()||!$('nm').value.trim())return say('학번과 이름을 먼저 입력하세요',0);
+ const v=$('v');if(!v.videoWidth)return say('카메라 준비 중이에요',0);
+ const W=640,H=Math.round(W*v.videoHeight/v.videoWidth),c=document.createElement('canvas');c.width=W;c.height=H;
+ const x=c.getContext('2d');x.drawImage(v,0,0,W,H);
+ const n=new Date(),p=k=>String(k).padStart(2,'0');
+ const t=n.getFullYear()+'-'+p(n.getMonth()+1)+'-'+p(n.getDate())+' '+p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds())+'  '+$('id').value+' '+$('nm').value;
+ x.fillStyle='rgba(0,0,0,.55)';x.fillRect(0,H-30,W,30);x.fillStyle='#fff';x.font='bold 18px sans-serif';x.fillText(t,10,H-9);
+ data=c.toDataURL('image/jpeg',0.7);$('shot').src=data;$('shot').style.display='block';v.style.display='none';
+ $('snap').style.display='none';$('retake').style.display='block';$('send').style.display='block';say('',1)};
+$('retake').onclick=()=>{$('shot').style.display='none';$('v').style.display='block';$('snap').style.display='block';$('retake').style.display='none';$('send').style.display='none';data=''};
+$('send').onclick=()=>{$('send').disabled=true;say('올리는 중…',1);
+ try{localStorage.sid=$('id').value;localStorage.snm=$('nm').value;}catch(e){}
+ call({action:'submit',id:$('id').value,name:$('nm').value,img:data}).then(r=>{say((r.ok?'🐱 ':'')+r.msg+(r.time?' ('+r.time+')':''),r.ok);$('send').disabled=false;if(r.ok){$('send').style.display='none';$('retake').style.display='none'}}).catch(e=>{say('오류: 네트워크를 확인하고 다시 눌러 주세요',0);$('send').disabled=false})};
+cam();
+</script></body></html>
