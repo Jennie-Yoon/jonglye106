@@ -1,0 +1,26 @@
+<!doctype html><html><head><title>교사 확인</title><meta name="viewport" content="width=device-width,initial-scale=1"><meta charset="utf-8">
+<style>
+body{font-family:'Malgun Gothic',sans-serif;margin:0;background:#eef3f8;color:#1f3a5c;padding:14px}
+h1{font-size:20px}.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.miss{background:#fde8e8;color:#a33;padding:10px;border-radius:10px;margin:10px 0;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.c{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 5px #0002;font-size:13px}
+.c img{width:100%;display:block;aspect-ratio:3/4;object-fit:cover}.c div{padding:6px}
+button,input{padding:8px 12px;font-size:15px}
+</style></head><body>
+<h1>1학년 6반 온라인 종례 · 교사 확인</h1>
+<div class="bar"><input type="date" id="d"><button onclick="load()">조회</button><span id="sum"></span></div>
+<div id="miss"></div><div class="grid" id="g"></div>
+<script>
+const API="https://script.google.com/macros/s/AKfycbyL-EBtXRgKRk6X9WZOFXMuI2OA_OdipJwCu8n8UhAlG5ErC6qK0FD-r-I7nPRJ39As/exec";
+const key=new URLSearchParams(location.search).get('key')||'';
+document.getElementById('d').value=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+function load(){document.getElementById('sum').textContent='불러오는 중…';
+ fetch(API,{method:'POST',body:JSON.stringify({action:'admin',key:key,day:document.getElementById('d').value})}).then(r=>r.json()).then(r=>{
+  if(r.ok===false){document.getElementById('sum').textContent=r.msg;return}
+  document.getElementById('sum').textContent='제출 '+r.sent.length+' / '+r.total;
+  document.getElementById('miss').innerHTML=r.missing.length?'<div class="miss">미제출 '+r.missing.length+'명: '+r.missing.map(m=>m.id.slice(-2)+' '+m.name).join(', ')+'</div>':'<div class="miss" style="background:#e6f6ea;color:#1b6">전원 제출 🎉</div>';
+  document.getElementById('g').innerHTML=r.sent.map(s=>'<div class="c"><img src="'+s.img+'"><div><b>'+s.id.slice(-2)+' '+s.name+'</b> · '+s.time+'</div></div>').join('');
+ }).catch(e=>document.getElementById('sum').textContent='오류: '+e)}
+load();
+</script></body></html>
